@@ -22,24 +22,16 @@ import sys
 import frontends.json.run as frontend
 import backends.monitor_gen.run as backend
 
-def main(inFile_):
+# Read command line arguments
+argParser = argparse.ArgumentParser()
+argParser.add_argument("description", help="File containing the trace description")
+args = argParser.parse_args()
 
-    # Call frontend to create traceModel
-    if inFile_.endswith('.json'):
-        traceModel = frontend.main(inFile_)
-    else:
-        sys.exit("FATAL: Descritption format is not supported. Currently only supporting files of type .json")
+# Call frontend to create traceModel
+if args.description.endswith('.json'):
+    traceModel = frontend.main(args.description)
+else:
+    sys.exit("FATAL: Descritption format is not supported. Currently only supporting files of type .json")
 
-    # Call backend
-    backend.main(traceModel)
-
-
-# Run this if called stand-alone (i.e. this file is called directly from command line)
-if __name__ == '__main__':
-
-    # Read command line arguments
-    argParser = argparse.ArgumentParser()
-    argParser.add_argument("description", help="File containing the trace description")
-    args = argParser.parse_args()
-
-    main(args.description)
+# Call backend
+backend.main(traceModel)

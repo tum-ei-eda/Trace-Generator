@@ -39,8 +39,8 @@ class Trace(MetaTraceModel_base):
         self.traceValues[name_] = trVal
         return trVal
         
-    def createAndAddInstructionType(self, name_):
-        instrType = InstructionType(name_, self)
+    def createAndAddInstructionType(self, name_, id_):
+        instrType = InstructionType(name_, id_, self)
         self.instructionTypes.append(instrType)
         return instrType
 
@@ -59,16 +59,12 @@ class Trace(MetaTraceModel_base):
     
 class InstructionType(MetaTraceModel_base):
 
-    currentId = 0
-    
-    def __init__(self, name_, parent_):
+    def __init__(self, name_, id_, parent_):
         self.name = name_
-        self.identifier = InstructionType.currentId
+        self.identifier = id_
         self.instructions = []
         self.mappings = {}
         self.__parent = parent_
-
-        InstructionType.currentId += 1
         
         super().__init__()
 

@@ -1,5 +1,6 @@
 {"trace": {
     "name": "InstructionTrace",
+    "setId": "Automatic",
     "traceValues": [
 	{"name": "pc"},
 	{"name": "opc"},
