@@ -56,6 +56,18 @@ class Trace(MetaTraceModel_base):
 
     def getAllInstructionTypes(self):
         return self.instructionTypes
+
+    def getAllMappings(self):
+        mappings = []
+        for instrType_i in self.getAllInstructionTypes():
+            mappings.extend(instrType_i.getAllMappings())
+        return mappings
+
+    def getAllDescriptions(self):
+        descriptions = []
+        for map_i in self.getAllMappings():
+            descriptions.append(map_i.description)
+        return descriptions
     
 class InstructionType(MetaTraceModel_base):
 
@@ -81,8 +93,8 @@ class InstructionType(MetaTraceModel_base):
         except KeyError:
             raise TypeError("Mapping for instruction %s: Cannot create mapping for trace-value %s. Trace-value does not exist (Make sure to add all trace-values to the trace-model before creating mappings)" %(self.name, trValName_))
 
-        mapping = Mapping(trVal, description_)
-        self.mappings[trValName_] = (mapping)
+        mapping = Mapping(trVal, Description(description_))
+        self.mappings[trValName_] = mapping
         return mapping
 
     def getAllInstructions(self):
@@ -132,4 +144,40 @@ class Mapping(MetaTraceModel_base):
         return self.traceValue
 
     def getDescription(self):
-        return self.description
+        return self.description.resolved
+
+    def getAllBitfields(self):
+        return self.description.bitfields
+    
+class Description(MetaTraceModel_base):
+
+    def __init__(self, orig_):
+        self.original = orig_
+        self.resolved = ""
+        self.bitfields = []
+
+    def createAndAddBitfield(self, name_):
+        bf = Bitfield(name_)
+        self.bitfields.append(bf)
+        return bf
+
+class Bitfield(MetaTraceModel_base):
+
+    def __init__(self, name_):
+        self.name = name_
+        self.bitRanges = []
+
+    def createAndAddBitRange(self, offset_, msb_, lsb_):
+        br = BitRange(offset_, msb_, lsb_)
+        self.bitRanges.append(br)
+        return br
+
+    def getAllBitRanges(self):
+        return self.bitRanges
+
+class BitRange(MetaTraceModel_base):
+
+    def __init__(self, offset_, msb_, lsb_):
+        self.offset = offset_
+        self.msb = msb_
+        self.lsb = lsb_

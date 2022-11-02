@@ -15,6 +15,7 @@
 #
 
 import json
+import re
 
 from metamodel import MetaTraceModel
 
@@ -87,6 +88,50 @@ class Parser():
         return trace_model
 
 
+    # TODO: Initial solution with BITFIELD keyword. Find way to incoperate CoreDSL?
+    # TODO: Tryout version. Even if we use this method, this code needs clearer concept and clean-up
+    def resolveDescriptions(self, traceModel_):
+        
+        for descr_i in traceModel_.getAllDescriptions():
+
+            bitfieldDescriptions = re.findall("\$\[BITFIELD.*\]", descr_i.original)
+
+            if not bitfieldDescriptions:
+                descr_i.resolved = descr_i.original
+
+            else:
+                for bfDescr_i in bitfieldDescriptions:
+
+                    # Find name of bitfield
+                    name = re.split("\$\[BITFIELD", bfDescr_i)[1]
+                    name = re.split("\{.*\}\]", name)[0]
+                    name = name.replace(' ','')
+                    
+                    bitfield_model = descr_i.createAndAddBitfield(name)
+                    
+                    # Find bitranges
+                    ranges = re.split("\$\[BITFIELD.*\{", bfDescr_i)[1]
+                    ranges = re.split("\}\]", ranges)[0]
+                    ranges = re.split("\|", ranges)
+
+                    for r_i in ranges:
+                        r = r_i.replace('(','')
+                        r = r.replace(')','')
+                        r = r.replace(' ', '')
+                        r_split = re.split(":", r)
+                        offset = r_split[0]
+                        bits = re.split(",", r_split[1])
+                        msb = bits[0]
+                        lsb = bits[1]
+
+                        bitfield_model.createAndAddBitRange(offset, msb, lsb)
+
+                    # Resolve description
+                    descr_i.resolved = re.sub("\$\[BITFIELD.*\]", bitfield_model.name, descr_i.original)
+                                            
+
+    ## HELPER FUNCTIONS
+            
     def __addMapping(self, instrTypeModel_, instrOrGroup_):
         for mapping_i in instrOrGroup_['mappings']:
             instrTypeModel_.createAndAddMapping(mapping_i['traceValue'], mapping_i['description'])

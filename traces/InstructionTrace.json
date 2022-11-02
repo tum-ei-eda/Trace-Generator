@@ -4,7 +4,11 @@
     "traceValues": [
 	{"name": "pc"},
 	{"name": "opc"},
-	{"name": "assembly", "type": "string"}
+	{"name": "assembly", "type": "string"},
+	{"name": "rs1"},
+	{"name": "rs2"},
+	{"name": "rd"},
+	{"name": "imm"}
     ],
     "instructions": [
 	{"name": "bne", "mappings": [
@@ -18,11 +22,25 @@
 	]}
     ],
     "instructionGroups": [
-	{"name": "Arith",
-	 "instructions": [{"name": "add"}, {"name": "sub"}],
+	{"name": "Arith_R_Type",
+	 "instructions": [{"name": "add"}, {"name": "sub"}, {"name": "sll"}, {"name": "xor"}, {"name": "or"}, {"name": "and"}, {"name": "mul"}, {"name": "rem"}],
 	 "mappings": [
-	    {"traceValue": "opc", "description": "(int)instr.opc_.code_.getWord(0)"},
-	    {"traceValue": "pc", "description": "ic.current_address_"}
+	     {"traceValue": "opc", "description": "(int)instr.opc_.code_.getWord(0)"},
+	     {"traceValue": "pc", "description": "ic.current_address_"},
+	     {"traceValue": "assembly", "description": "instr.printASM(ba).substr(0, instr.printASM(ba).find(\" #\"))"},
+	     {"traceValue": "rs1", "description": "$[BITFIELD rs1 {(0:19,15)}]"},
+	     {"traceValue": "rs2", "description": "$[BITFIELD rs2 {(0:24,20)}]"}
+	 ]
+	},
+	{"name": "Branch_B_Type",
+	 "instructions": [{"name": "beq"}, {"name": "bne"}, {"name": "blt"}, {"name": "bge"}, {"name": "bltu"}, {"name": "bgeu"}],
+	 "mappings": [
+	     {"traceValue": "opc", "description": "(int)instr.opc_.code_.getWord(0)"},
+	     {"traceValue": "pc", "description": "ic.current_address_"},
+	     {"traceValue": "assembly", "description": "instr.printASM(ba).substr(0, instr.printASM(ba).find(\" #\"))"},
+	     {"traceValue": "rs1", "description": "$[BITFIELD rs1 {(0:19,15)}]"},
+	     {"traceValue": "rs2", "description": "$[BITFIELD rs2 {(0:24,20)}]"},
+	     {"traceValue": "imm", "description": "$[BITFIELD imm {(12:31,31)|(11:7,7)|(5:30,25)|(1:11,8)}]"}
 	 ]
 	}
     ]

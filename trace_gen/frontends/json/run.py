@@ -36,6 +36,8 @@ def main(inFile_, outdir_=None):
     print("-- Generation TraceModel form JSON-file --")
     model = Parser().parse(inFile)
 
+    Parser().resolveDescriptions(model)
+    
     if outdir is not None:
         print("")
         print("-- Storing model --")
