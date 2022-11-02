@@ -1,0 +1,28 @@
+{"trace": {
+    "name": "InstructionTrace",
+    "traceValues": [
+	{"name": "pc"},
+	{"name": "opc"},
+	{"name": "assembly", "type": "string"}
+    ],
+    "instructions": [
+	{"name": "bne", "mappings": [
+	    {"traceValue": "opc", "description": "(int)instr.opc_.code_.getWord(0)"},
+	    {"traceValue": "pc", "description": "ic.current_address_"}
+	]},
+	{"name": "_def", "mappings": [
+	    {"traceValue": "opc", "description": "(int)instr.opc_.code_.getWord(0)"},
+	    {"traceValue": "pc", "description": "ic.current_address_"},
+	    {"traceValue": "assembly", "description": "instr.printASM(ba).substr(0, instr.printASM(ba).find(\" #\"))"}
+	]}
+    ],
+    "instructionGroups": [
+	{"name": "Arith",
+	 "instructions": [{"name": "add"}, {"name": "sub"}],
+	 "mappings": [
+	    {"traceValue": "opc", "description": "(int)instr.opc_.code_.getWord(0)"},
+	    {"traceValue": "pc", "description": "ic.current_address_"}
+	 ]
+	}
+    ]
+}}
