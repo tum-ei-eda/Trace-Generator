@@ -22,9 +22,7 @@ import pickle
 
 from .Parser import Parser
 
-def main(inFile_, outdir_):
-
-    print(">> -.- <<")
+def main(inFile_, outdir_=None):
     
     # Find pathes for json-description and output-directory
     inFile = pathlib.Path(inFile_).resolve()
@@ -58,6 +56,8 @@ def main(inFile_, outdir_):
         with outfile.open('wb') as f:
             pickle.dump(model, f)
 
+    return model
+            
 # Run this if called stand-alone (i.e. this file is directly called)
 if __name__ == '__main__':
 

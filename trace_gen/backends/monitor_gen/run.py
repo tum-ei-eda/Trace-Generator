@@ -25,10 +25,7 @@ import shutil
 
 from .CodeGenerator import CodeGenerator
 
-def main(model_, printerGen_):
-
-    print(">> x,x <<")
-    print(model_.name)
+def main(model_, printerGen_=False):
 
     print()
     print("-- Creating output directories --")
