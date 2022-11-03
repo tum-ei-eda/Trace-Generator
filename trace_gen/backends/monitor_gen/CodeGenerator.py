@@ -16,7 +16,7 @@
 
 from mako.template import Template
 
-from .MonitorBuilder import MonitorBuilder as Builder
+from .CodeBuilder import CodeBuilder as Builder
 
 class CodeGenerator:
 
@@ -90,7 +90,7 @@ class CodeGenerator:
     def __generateInstructionPrinters(self, traceModel_):
 
         template = Template(filename = str(self.templateDir_printer) + "/src/instructionPrinters.mako")
-        code = template.render(**{"traceModel_" : traceModel_})
+        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_.name)})
         
         outFile = self.outDirBase_printer / "src" / (traceModel_.name + "_InstructionPrinters.cpp")
         with outFile.open('w') as f:

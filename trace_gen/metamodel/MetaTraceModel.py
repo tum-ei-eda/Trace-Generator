@@ -115,7 +115,6 @@ class InstructionType(MetaTraceModel_base):
         return self.mappings.values()
 
     def getMapping(self, trVal_):
-
         try:
             return self.mappings[trVal_.name]
         except KeyError:

@@ -23,6 +23,7 @@
 
 #include <sstream>
 #include <string>
+#include <iomanip>
 
 InstructionPrinterSet *${traceModel_.name}_InstrPrinterSet = new InstructionPrinterSet("${traceModel_.name}_InstrPrinterSet");
 
@@ -36,9 +37,9 @@ static InstructionPrinter *instrPrinter_${type_i.name} = new InstructionPrinter(
     ${traceModel_.name}_Channel* channel = static_cast<${traceModel_.name}_Channel*>(channel_);
     % for trVal_i in traceModel_.getAllTraceValues():
     % if type_i.getMapping(trVal_i) is not None:
-    ret_strs << channel->${trVal_i.name}[instr_] << "  ";
+    ret_strs << ${builder_.getStreamSetup(trVal_i.dataType)} << channel->${trVal_i.name}[instr_] << ${builder_.getEoL()};
     % else:
-    ret_strs << "----------  ";
+    ret_strs << ${builder_.getEmptyStream(trVal_i.dataType)} << ${builder_.getEoL()};
     % endif
     % endfor
     return ret_strs.str();
