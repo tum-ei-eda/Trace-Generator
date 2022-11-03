@@ -36,7 +36,7 @@ static InstructionMonitor *instrMonitor_${instr_i.name} = new InstructionMonitor
     % for bf_i in map_i.getAllBitfields():
     int ${bf_i.name} = 0;
     % for br_i in bf_i.getAllBitRanges():
-    static instr::BitArrayRange R_${bf_i.name}_${br_i.offset}(${br_i.msb},${br_i.lsb});
+    static etiss::instr::BitArrayRange R_${bf_i.name}_${br_i.offset}(${br_i.msb},${br_i.lsb});
     ${bf_i.name} += R_${bf_i.name}_${br_i.offset}.read(ba) << ${br_i.offset};
     % endfor
     % endfor
