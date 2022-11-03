@@ -11,10 +11,6 @@
 	{"name": "imm"}
     ],
     "instructions": [
-	{"name": "bne", "mappings": [
-	    {"traceValue": "opc", "description": "(int)instr.opc_.code_.getWord(0)"},
-	    {"traceValue": "pc", "description": "ic.current_address_"}
-	]},
 	{"name": "_def", "mappings": [
 	    {"traceValue": "opc", "description": "(int)instr.opc_.code_.getWord(0)"},
 	    {"traceValue": "pc", "description": "ic.current_address_"},

@@ -30,6 +30,7 @@ class Trace(MetaTraceModel_base):
     def __init__(self, name_):
         self.name = name_
         self.instructionTypes = []
+        self.instructions = {}
         self.traceValues = {}
         
         super().__init__()
@@ -47,12 +48,17 @@ class Trace(MetaTraceModel_base):
     def getAllTraceValues(self):
         return self.traceValues.values()
 
+    def registerInstruction(self, instr_):
+        self.instructions[instr_.name] = instr_
+    
+    def getInstruction(self, name_):
+        try:
+            return self.instructions[name_]
+        except KeyError:
+            return None
+    
     def getAllInstructions(self):
-        instrList = []
-        for type_i in self.instructionTypes:
-            for instr_i in type_i.getAllInstructions():
-                instrList.append(instr_i)
-        return instrList
+        return self.instructions.values()
 
     def getAllInstructionTypes(self):
         return self.instructionTypes
@@ -81,7 +87,12 @@ class InstructionType(MetaTraceModel_base):
         super().__init__()
 
     def createAndAddInstruction(self, name_):
+        
+        if self.__parent.getInstruction(name_) is not None:
+            raise TypeError("Cannot create instruction %s. Instruction has already been created for instruction-type %s" %(name_, self.__parent.getInstruction(name_).getInstructionType().name))
+            
         instr = Instruction(name_, self)
+        self.__parent.registerInstruction(instr)
         self.instructions.append(instr)
         return instr
 

@@ -54,9 +54,9 @@ class Parser():
         # Create trace values (NOTE: Must do that before adding instructions / creating mappings!)
         for trVal_i in trace_json['traceValues']:
             try:
-                test = trace_model.createAndAddTraceValue(trVal_i['name'], trVal_i["type"])
+                trace_model.createAndAddTraceValue(trVal_i['name'], trVal_i["type"])
             except KeyError:
-                test = trace_model.createAndAddTraceValue(trVal_i['name'])
+                trace_model.createAndAddTraceValue(trVal_i['name'])
                 
         # Create instruction-types for all instruction groups
         try:
