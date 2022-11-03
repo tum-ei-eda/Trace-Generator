@@ -25,6 +25,7 @@ import backends.monitor_gen.run as backend
 # Read command line arguments
 argParser = argparse.ArgumentParser()
 argParser.add_argument("description", help="File containing the trace description")
+argParser.add_argument("-p", "--printer", action="store_true", help="Switch to generate trace printer")
 args = argParser.parse_args()
 
 # Call frontend to create traceModel
@@ -34,4 +35,4 @@ else:
     sys.exit("FATAL: Descritption format is not supported. Currently only supporting files of type .json")
 
 # Call backend
-backend.main(traceModel)
+backend.main(traceModel, args.printer)
