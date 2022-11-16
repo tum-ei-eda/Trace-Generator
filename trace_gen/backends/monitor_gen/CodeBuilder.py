@@ -37,6 +37,9 @@ class CodeBuilder:
     def getInstrCntName(self):
         return (self.__getMonitorPrefix() + "instrCnt")
 
+    def getInstrMonitorName(self, instrName_):
+        return ("instrMonitor_" + instrName_.replace('.', '_'))
+
     def getStreamSetup(self, type_):
         if(type_ == "int"):
             return self.__getStreamSetupInt()

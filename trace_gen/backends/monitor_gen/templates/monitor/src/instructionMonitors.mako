@@ -26,7 +26,7 @@
 InstructionMonitorSet *${traceModel_.name}_InstrMonitorSet = new InstructionMonitorSet("${traceModel_.name}_InstrMonitorSet");
 
 % for instr_i in traceModel_.getAllInstructions():
-static InstructionMonitor *instrMonitor_${instr_i.name} = new InstructionMonitor(
+static InstructionMonitor *${builder_.getInstrMonitorName(instr_i.name)} = new InstructionMonitor(
   ${traceModel_.name}_InstrMonitorSet,
   "${instr_i.name}",
   [](etiss::instr::BitArray &ba, etiss::instr::Instruction &instr, etiss::instr::InstructionContext &ic){
