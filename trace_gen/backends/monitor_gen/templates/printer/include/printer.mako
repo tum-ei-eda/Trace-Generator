@@ -27,6 +27,7 @@ public:
 
   ${traceModel_.name}_Printer();
 
+  virtual void initialize(void);
 };
 
 #endif // ${traceModel_.name.upper()}_PRINTER_H

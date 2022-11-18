@@ -23,8 +23,7 @@ class CodeGenerator:
     def __init__(self, templateDir_, outDir_):
         self.templateDir_monitor = templateDir_ / "monitor"
         self.templateDir_printer = templateDir_ / "printer"
-        self.outDirBase_monitor = outDir_ / "monitor"
-        self.outDirBase_printer = outDir_ / "printer"
+        self.outDirBase = outDir_
         
     def generateMonitor(self, traceModel_):
 
@@ -40,9 +39,9 @@ class CodeGenerator:
     def __generateTraceChannel(self, traceModel_):
 
         template = Template(filename = str(self.templateDir_monitor) + "/include/channel.mako")
-        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_.name)})
+        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
 
-        outFile = self.outDirBase_monitor / "include" / (traceModel_.name + "_Channel.h")
+        outFile = self.outDirBase / "include" / (traceModel_.name + "_Channel.h")
         with outFile.open('w') as f:
             f.write(code)
 
@@ -51,23 +50,23 @@ class CodeGenerator:
         template_header = Template(filename = str(self.templateDir_monitor) + "/include/monitor.mako")
         code_header = template_header.render(**{"traceModel_" : traceModel_})
 
-        outFile_header = self.outDirBase_monitor / "include" / (traceModel_.name + "_Monitor.h")
+        outFile_header = self.outDirBase / "include" / (traceModel_.name + "_Monitor.h")
         with outFile_header.open('w') as f:
             f.write(code_header)
 
         template_src = Template(filename = str(self.templateDir_monitor) + "/src/monitor.mako")
-        code_src = template_src.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_.name)})
+        code_src = template_src.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
 
-        outFile_src = self.outDirBase_monitor / "src" / (traceModel_.name + "_Monitor.cpp")
+        outFile_src = self.outDirBase / "src" / (traceModel_.name + "_Monitor.cpp")
         with outFile_src.open('w') as f:
             f.write(code_src)
 
     def __generateInstructionMonitors(self, traceModel_):
 
         template = Template(filename = str(self.templateDir_monitor) + "/src/instructionMonitors.mako")
-        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_.name)})
+        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
 
-        outFile = self.outDirBase_monitor / "src" / (traceModel_.name + "_InstructionMonitors.cpp")
+        outFile = self.outDirBase / "src" / (traceModel_.name + "_InstructionMonitors.cpp")
         with outFile.open('w') as f:
             f.write(code)
 
@@ -76,22 +75,22 @@ class CodeGenerator:
         template_header = Template(filename = str(self.templateDir_printer) + "/include/printer.mako")
         code_header = template_header.render(**{"traceModel_" : traceModel_})
 
-        outFile_header = self.outDirBase_printer / "include" / (traceModel_.name + "_Printer.h")
+        outFile_header = self.outDirBase / "include" / (traceModel_.name + "_Printer.h")
         with outFile_header.open('w') as f:
             f.write(code_header)
 
         template_src = Template(filename = str(self.templateDir_printer) + "/src/printer.mako")
-        code_src = template_src.render(**{"traceModel_" : traceModel_})
+        code_src = template_src.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
 
-        outFile_src = self.outDirBase_printer / "src" / (traceModel_.name + "_Printer.cpp")
+        outFile_src = self.outDirBase / "src" / (traceModel_.name + "_Printer.cpp")
         with outFile_src.open('w') as f:
             f.write(code_src)
 
     def __generateInstructionPrinters(self, traceModel_):
 
         template = Template(filename = str(self.templateDir_printer) + "/src/instructionPrinters.mako")
-        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_.name)})
+        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
         
-        outFile = self.outDirBase_printer / "src" / (traceModel_.name + "_InstructionPrinters.cpp")
+        outFile = self.outDirBase / "src" / (traceModel_.name + "_InstructionPrinters.cpp")
         with outFile.open('w') as f:
             f.write(code)

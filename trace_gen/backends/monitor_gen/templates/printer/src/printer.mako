@@ -20,7 +20,19 @@
 
 #include "Components/Printer.h"
 
+#include <iostream>
+#include <iomanip>
+
 extern InstructionPrinterSet* ${traceModel_.name}_InstrPrinterSet;
 
 ${traceModel_.name}_Printer::${traceModel_.name}_Printer(): Printer("${traceModel_.name}_Printer", ${traceModel_.name}_InstrPrinterSet)
 {}
+
+void ${traceModel_.name}_Printer::initialize(void)
+{
+  std::stringstream caption_strs;	
+  % for trVal_i in traceModel_.getAllTraceValues():
+  caption_strs << ${builder_.getStreamSetupCaption(trVal_i)} << "${trVal_i.name}" << ${builder_.getSeparater()};
+  % endfor
+  print(caption_strs.str());
+}

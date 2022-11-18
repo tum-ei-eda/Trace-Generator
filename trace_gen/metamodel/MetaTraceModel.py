@@ -35,8 +35,8 @@ class Trace(MetaTraceModel_base):
         
         super().__init__()
 
-    def createAndAddTraceValue(self, name_, type_="int"):
-        trVal = TraceValue(name_, type_)
+    def createAndAddTraceValue(self, name_, type_="int", size_=-1):
+        trVal = TraceValue(name_, type_, size_)
         self.traceValues[name_] = trVal
         return trVal
         
@@ -136,9 +136,10 @@ class Instruction(MetaTraceModel_base):
     
 class TraceValue(MetaTraceModel_base):
 
-    def __init__(self, name_, type_):
+    def __init__(self, name_, type_, size_):
         self.name = name_
         self.dataType = type_
+        self.size = size_
         
         super().__init__()
 
@@ -154,7 +155,7 @@ class Mapping(MetaTraceModel_base):
         return self.traceValue
 
     def getDescription(self):
-        return self.description.resolved
+        return self.description
 
     def getAllBitfields(self):
         return self.description.bitfields
@@ -163,7 +164,7 @@ class Description(MetaTraceModel_base):
 
     def __init__(self, orig_):
         self.original = orig_
-        self.resolved = ""
+        self.resolved = []
         self.bitfields = []
 
     def createAndAddBitfield(self, name_):
@@ -171,6 +172,25 @@ class Description(MetaTraceModel_base):
         self.bitfields.append(bf)
         return bf
 
+    def createAndAppendDescriptionSnippet(self, content_, preProcess_=False):
+        snippet = DescriptionSnippet(content_, preProcess_)
+        self.resolved.append(snippet)
+
+    def getAllDescriptionSnippets(self):
+        return self.resolved
+        
+class DescriptionSnippet(MetaTraceModel_base):
+
+    def __init__(self, content_, preProcess_):
+        self.content = content_
+        self.preProcess = preProcess_
+
+    def getContent(self):
+        return self.content
+
+    def isPreProcessed(self):
+        return self.preProcess
+    
 class Bitfield(MetaTraceModel_base):
 
     def __init__(self, name_):

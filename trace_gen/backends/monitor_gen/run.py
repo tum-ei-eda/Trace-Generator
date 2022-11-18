@@ -31,11 +31,8 @@ def main(model_, printerGen_=False):
     print("-- Creating output directories --")
     curDir = pathlib.Path(__file__).parents[0]
     outDir = createOrReplaceDir(curDir/ "out" / model_.name)
-    createOrReplaceDir(outDir / "monitor" / "src")
-    createOrReplaceDir(outDir / "monitor" / "include")
-    if(printerGen_):
-        createOrReplaceDir(outDir / "printer" / "src")
-        createOrReplaceDir(outDir / "printer" / "include")
+    createOrReplaceDir(outDir / "src")
+    createOrReplaceDir(outDir / "include")
 
     print()
     print("-- Generating code for trace-monitor --")

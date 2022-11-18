@@ -32,7 +32,7 @@ public:
   % if trVal_i.dataType == "int":
   int ${trVal_i.name} [${builder_.getChannelSize()}];
   % elif trVal_i.dataType == "string":
-  char ${trVal_i.name} [${builder_.getChannelSize()}] [${builder_.getMaxStringSize()}];
+  char ${trVal_i.name} [${builder_.getChannelSize()}] [${builder_.getStringSize(trVal_i)}];
   % endif
   % endfor
 };

@@ -41,9 +41,9 @@ static InstructionMonitor *${builder_.getInstrMonitorName(instr_i.name)} = new I
     % endfor
     % endfor
     % if map_i.getTraceValue().dataType == "int":
-    ret_strs << "${builder_.getBufferName(map_i.getTraceValue().name)}[*${builder_.getInstrCntName()}] = " << ${map_i.getDescription()} << ";\n";
+    ret_strs << "${builder_.getBufferName(map_i.getTraceValue().name)}[*${builder_.getInstrCntName()}] = " << ${builder_.getDescriptionString(map_i.getDescription())} << ";\n";
     % elif map_i.getTraceValue().dataType == "string":
-    ret_strs << "strcpy(${builder_.getBufferName(map_i.getTraceValue().name)}[*${builder_.getInstrCntName()}],\"" << ${map_i.getDescription()} << "\");\n";
+    ret_strs << "strcpy(${builder_.getBufferName(map_i.getTraceValue().name)}[*${builder_.getInstrCntName()}],\"" << ${builder_.getDescriptionString(map_i.getDescription())} << "\");\n";
     % endif
     % endfor
     ret_strs << "*${builder_.getInstrCntName()} += 1;\n";

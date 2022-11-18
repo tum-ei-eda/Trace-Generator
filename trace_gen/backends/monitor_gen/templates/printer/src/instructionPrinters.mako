@@ -37,9 +37,9 @@ static InstructionPrinter *instrPrinter_${type_i.name} = new InstructionPrinter(
     ${traceModel_.name}_Channel* channel = static_cast<${traceModel_.name}_Channel*>(channel_);
     % for trVal_i in traceModel_.getAllTraceValues():
     % if type_i.getMapping(trVal_i) is not None:
-    ret_strs << ${builder_.getStreamSetup(trVal_i.dataType)} << channel->${trVal_i.name}[instr_] << ${builder_.getEoL()};
+    ret_strs << ${builder_.getStreamSetup(trVal_i)} << channel->${trVal_i.name}[instr_] << ${builder_.getSeparater()};
     % else:
-    ret_strs << ${builder_.getEmptyStream(trVal_i.dataType)} << ${builder_.getEoL()};
+    ret_strs << ${builder_.getEmptyStream(trVal_i)} << ${builder_.getSeparater()};
     % endif
     % endfor
     return ret_strs.str();

@@ -33,7 +33,7 @@ extern "C"
   % if trVal_i.dataType == "int":
   int *${builder_.getBufferName(trVal_i.name)};
   % elif trVal_i.dataType == "string":
-  char (*${builder_.getBufferName(trVal_i.name)})[${builder_.getMaxStringSize()}];
+  char (*${builder_.getBufferName(trVal_i.name)})[${builder_.getStringSize(trVal_i)}];
   % endif
   % endfor
 }
@@ -77,7 +77,7 @@ std::string ${traceModel_.name}_Monitor::getBlockDeclarations(void) const
   % if trVal_i.dataType == "int":
   ret_strs << "extern int *${builder_.getBufferName(trVal_i.name)};\n";
   % elif trVal_i.dataType == "string":
-  ret_strs << "extern char (*${builder_.getBufferName(trVal_i.name)})[${builder_.getMaxStringSize()}];\n";
+  ret_strs << "extern char (*${builder_.getBufferName(trVal_i.name)})[${builder_.getStringSize(trVal_i)}];\n";
   % endif
   % endfor
 

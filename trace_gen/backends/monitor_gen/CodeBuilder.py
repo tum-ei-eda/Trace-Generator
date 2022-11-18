@@ -18,16 +18,16 @@ class CodeBuilder:
 # The idea of this class is to contain output code specific
 # information (e.g. channel sizes, naming conventions, etc)
 
-    __MAX_STRING_SIZE = 20
+    __MAX_STRING_SIZE_DEFAULT = 100
     __MAX_INT_SIZE = 8
     __CHANNEL_SIZE = 100
     
-    def __init__(self, modelName_):
-        self.modelName = modelName_
+    def __init__(self, model_):
+        self.model = model_
 
-    def getMaxStringSize(self):
-        return self.__MAX_STRING_SIZE
-
+    def getStringSize(self, trVal_):
+        return self.__getValidStringSize(trVal_)
+    
     def getChannelSize(self):
         return self.__CHANNEL_SIZE
 
@@ -40,35 +40,62 @@ class CodeBuilder:
     def getInstrMonitorName(self, instrName_):
         return ("instrMonitor_" + instrName_.replace('.', '_'))
 
-    def getStreamSetup(self, type_):
-        if(type_ == "int"):
+    def getStreamSetup(self, trVal_):
+        if(trVal_.dataType == "int"):
             return self.__getStreamSetupInt()
-        elif(type_ == "string"):
-            return self.__getStreamSetupString()
+        elif(trVal_.dataType == "string"):
+            return self.__getStreamSetupString(self.__getValidStringSize(trVal_))
         else:
             raise TypeError("Cannot call CodeBuilder::getStreamSetup with type %s" %type_)
 
-    def getEmptyStream(self, type_):
-        if(type_ == "int"):
+    def getEmptyStream(self, trVal_):
+        if(trVal_.dataType == "int"):
             return self.__getEmptyStreamWithSize(self.__MAX_INT_SIZE + 2)
-        elif(type_ == "string"):
-            return self.__getEmptyStreamWithSize(self.__MAX_STRING_SIZE)
+        elif(trVal_.dataType == "string"):
+            return self.__getEmptyStreamWithSize(self.__getValidStringSize(trVal_))
         else:
             raise TypeError("Cannot call CodeBuilder::getStreamSetup with type %s" %type_)
 
-    def getEoL(self):
-        return "\" \""
+    def getStreamSetupCaption(self, trVal_):
+        if(trVal_.dataType == "int"):
+            return self.__getStreamSetupString(self.__MAX_INT_SIZE + 2) # TODO: This won't work if name of tracevalue is longer than INT_SIZE + 2
+        elif(trVal_.dataType == "string"):
+            return self.__getStreamSetupString(self.__getValidStringSize(trVal_))
+        else:
+            raise TypeError("Cannot call CodeBuilder::getStreamSetup with type %s" %type_)
         
+    def getSeparater(self):
+        return "\" | \""
+
+    def getDescriptionString(self, description_):
+        ret = ""
+        first = True
+        for snip_i in description_.getAllDescriptionSnippets():
+            if not first:
+                ret += " << "
+            else:
+                first = False
+            if not snip_i.isPreProcessed():
+                ret += "\""
+            ret += snip_i.getContent()
+            if not snip_i.isPreProcessed():
+                ret += "\""
+        return ret
+            
+            
     ## HELPER FUNCTIONS
     
     def __getMonitorPrefix(self):
-        return (self.modelName + "_Monitor_")
+        return (self.model.name + "_Monitor_")
 
     def __getStreamSetupInt(self):
         return ("\"0x\" << std::setfill(\'0\') << std::setw(" + str(self.__MAX_INT_SIZE) + ") << std::right << std::hex")
 
-    def __getStreamSetupString(self):
-        return ("std::setfill(\' \') << std::setw(" + str(self.__MAX_STRING_SIZE) + ") << std::left")
+    def __getStreamSetupString(self, size_):
+        return ("std::setfill(\' \') << std::setw(" + str(size_) + ") << std::left")
     
     def __getEmptyStreamWithSize(self, size_):
         return ("std::setfill(\'-\') << std::setw(" + str(size_) + ") << \"\"")
+
+    def __getValidStringSize(self, trVal_):
+        return trVal_.size if trVal_.size > 0 else self.__MAX_STRING_SIZE_DEFAULT
