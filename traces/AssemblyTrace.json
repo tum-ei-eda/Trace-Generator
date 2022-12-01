@@ -1,0 +1,12 @@
+{"trace": {
+    "name": "AssemblyTrace",
+    "setId": "Automatic",
+    "traceValues": [
+	{"name": "assembly", "type": "string"}
+    ],
+    "instructions": [
+	{"name": "_def", "mappings": [
+	    {"traceValue": "assembly", "description": "instr.printASM(ba)"}
+	]}
+    ]
+}}

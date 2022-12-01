@@ -11,7 +11,13 @@
 	{"name": "rs1_data"},
 	{"name": "rs2_data"},
 	{"name": "rd_data"},
-	{"name": "imm"}
+	{"name": "imm"},
+	{"name": "alu_result"},
+	{"name": "acc_result"},
+	{"name": "jump_pc"},
+	{"name": "csr_data"},
+	{"name": "mem_wdata"},
+	{"name": "mem_rdata"}
     ],
     "instructions": [
 	{"name": "_def", "mappings": [
