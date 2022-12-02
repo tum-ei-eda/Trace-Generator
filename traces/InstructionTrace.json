@@ -35,8 +35,10 @@
 	     {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	     {"traceValue": "rs1_addr", "description": "${${BITFIELD rs1_addr [(0:19,15)]}}"},
 	     {"traceValue": "rs2_addr", "description": "${${BITFIELD rs2_addr [(0:24,20)]}}"},
+	     {"traceValue": "rd_addr", "description": "${${BITFIELD rd_addr [(0:11,7)]}}"},
 	     {"traceValue": "rs1_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs1_data [(0:19,15)]} }]"},
-	     {"traceValue": "rs2_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs2_data [(0:24,20)]} }]"}
+	     {"traceValue": "rs2_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs2_data [(0:24,20)]} }]"},
+	     {"traceValue": "rd_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rd_data [(0:11,7)]} }]", "position": "post"}
 	 ]
 	},
 	{"name": "Branch_B_Type",

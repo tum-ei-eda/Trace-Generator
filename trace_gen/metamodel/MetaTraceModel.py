@@ -96,7 +96,7 @@ class InstructionType(MetaTraceModel_base):
         self.instructions.append(instr)
         return instr
 
-    def createAndAddMapping(self, trValName_, description_):
+    def createAndAddMapping(self, trValName_, description_, position_):
 
         # Look up trace-value in dict. of parent/trace-model
         try:
@@ -104,7 +104,7 @@ class InstructionType(MetaTraceModel_base):
         except KeyError:
             raise TypeError("Mapping for instruction %s: Cannot create mapping for trace-value %s. Trace-value does not exist (Make sure to add all trace-values to the trace-model before creating mappings)" %(self.name, trValName_))
 
-        mapping = Mapping(trVal, Description(description_))
+        mapping = Mapping(trVal, Description(description_), position_)
         self.mappings[trValName_] = mapping
         return mapping
 
@@ -131,6 +131,20 @@ class Instruction(MetaTraceModel_base):
     def getAllMappings(self):
         return self.instructionType.getAllMappings()
 
+    def getAllPreMappings(self):
+        mappings = []
+        for map_i in self.instructionType.getAllMappings():
+            if map_i.positionIsPre():
+                mappings.append(map_i)
+        return mappings
+
+    def getAllPostMappings(self):
+        mappings = []
+        for map_i in self.instructionType.getAllMappings():
+            if map_i.positionIsPost():
+                mappings.append(map_i)
+        return mappings
+    
     def getInstructionType(self):
         return self.instructionType
     
@@ -145,12 +159,21 @@ class TraceValue(MetaTraceModel_base):
 
 class Mapping(MetaTraceModel_base):
 
-    def __init__(self, trVal_, descr_):
+    def __init__(self, trVal_, descr_, pos_):
         self.traceValue = trVal_
         self.description = descr_
+        if pos_ not in ["pre", "post"]:
+            raise TypeError("Cannot create object of type MetaTraceModel::Mapping with position %s! Currently supported positions are \"pre\" and \"post\"" %pos_)
+        self.position = pos_
         
         super().__init__()
 
+    def positionIsPre(self):
+        return (self.position == "pre")
+
+    def positionIsPost(self):
+        return (self.position == "post")
+        
     def getTraceValue(self):
         return self.traceValue
 

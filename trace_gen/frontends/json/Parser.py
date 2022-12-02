@@ -78,7 +78,7 @@ class Parser():
         # Create instruction-types for all singel instructions
         try:
             instructions = data['trace']['instructions']
-        except:
+        except KeyError:
             instructions = []
 
         for instr_i in instructions:
@@ -172,7 +172,10 @@ class Parser():
             
     def __addMapping(self, instrTypeModel_, instrOrGroup_):
         for mapping_i in instrOrGroup_['mappings']:
-            instrTypeModel_.createAndAddMapping(mapping_i['traceValue'], mapping_i['description'])
+            try:
+                instrTypeModel_.createAndAddMapping(mapping_i['traceValue'], mapping_i['description'], mapping_i['position'])
+            except KeyError:
+                instrTypeModel_.createAndAddMapping(mapping_i['traceValue'], mapping_i['description'], "pre")
 
 
     def __getId(self, instrOrGroup_):

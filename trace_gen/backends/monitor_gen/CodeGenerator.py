@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+from mako.lookup import TemplateLookup
 from mako.template import Template
 
 from .CodeBuilder import CodeBuilder as Builder
@@ -63,7 +64,9 @@ class CodeGenerator:
 
     def __generateInstructionMonitors(self, traceModel_):
 
-        template = Template(filename = str(self.templateDir_monitor) + "/src/instructionMonitors.mako")
+        # Need template lookup here, as instructionMonitor.mako includes a sub-template
+        templateLookup = TemplateLookup(directories=[str(self.templateDir_monitor / "src")])
+        template = templateLookup.get_template("instructionMonitors.mako")
         code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
 
         outFile = self.outDirBase / "src" / (traceModel_.name + "_InstructionMonitors.cpp")
