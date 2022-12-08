@@ -95,14 +95,12 @@ class Parser():
     def resolveDescriptions(self, traceModel_):
         
         for descr_i in traceModel_.getAllDescriptions():
-
+            
             # Resolve BITFIELD keyword
             bitfieldDescriptions = re.findall("\$\{BITFIELD[^\}]*\}", descr_i.original)
 
-            if not bitfieldDescriptions:
-                descr_temp = descr_i.original
-
-            else:
+            descr_temp = descr_i.original
+            if bitfieldDescriptions:
                 for bfDescr_i in bitfieldDescriptions:
 
                     # Isolate bitfield description 
@@ -130,7 +128,7 @@ class Parser():
                         lsb = bits[1]
                         bitfield_model.createAndAddBitRange(offset, msb, lsb)
 
-                    descr_temp = re.sub("\$\{BITFIELD[^\}]*\}", bitfield_model.name, descr_i.original)
+                    descr_temp = re.sub("\$\{BITFIELD[^\}]*\}", bitfield_model.name, descr_temp, 1)
                 
             # Break description into preprocessed and not-preprocessed description-snippets
             firstSplit = True
