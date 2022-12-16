@@ -34,5 +34,7 @@ void ${traceModel_.name}_Printer::initialize(void)
   % for trVal_i in traceModel_.getAllTraceValues():
   caption_strs << ${builder_.getStreamSetupCaption(trVal_i)} << "${trVal_i.name}" << ${builder_.getSeparater()};
   % endfor
-  print(caption_strs.str());
+
+  streamer.openStream();
+  streamer.stream(caption_strs.str() + "\n");
 }
