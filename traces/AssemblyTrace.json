@@ -2,10 +2,12 @@
     "name": "AssemblyTrace",
     "setId": "Automatic",
     "traceValues": [
+	{"name": "pc"},
 	{"name": "assembly", "type": "string", "size": 50}
     ],
     "instructions": [
 	{"name": "_def", "mappings": [
+	    {"traceValue": "pc", "description": "${ic.current_address_}"},
 	    {"traceValue": "assembly", "description": "${instr.printASM(ba)}"}
 	]}
     ]
