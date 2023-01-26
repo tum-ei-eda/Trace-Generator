@@ -65,7 +65,7 @@ class CodeBuilder:
             raise TypeError("Cannot call CodeBuilder::getStreamSetup with type %s" %type_)
         
     def getSeparater(self):
-        return "\" | \""
+        return "\" " + self.model.getSeparator() + " \""
 
     def getDescriptionString(self, description_):
         ret = ""

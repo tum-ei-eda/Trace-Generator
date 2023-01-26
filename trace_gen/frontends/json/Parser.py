@@ -50,7 +50,13 @@ class Parser():
 
         if self.setIdAuto == True:
             self.currentIdentifier = 0
-            
+
+        # Try to read separator attribute
+        try:
+            trace_model.setSeparator(trace_json['separator'])
+        except KeyError:
+            pass
+        
         # Create trace values (NOTE: Must do that before adding instructions / creating mappings!)
         for trVal_i in trace_json['traceValues']:
             try:

@@ -33,7 +33,7 @@ def main(inFile_, outdir_=None):
 
     # Parse json-description to trace-model
     print("")
-    print("-- Generation TraceModel form JSON-file --")
+    print("-- Generation TraceModel from JSON-file --")
     model = Parser().parse(inFile)
 
     Parser().resolveDescriptions(model)

@@ -1,9 +1,10 @@
 {"trace": {
     "name": "InstructionTrace",
     "setId": "Automatic",
+    "separator": ";",
     "traceValues": [
 	{"name": "pc"},
-	{"name": "opc"},
+	{"name": "code"},
 	{"name": "assembly", "type": "string", "size": 50},
 	{"name": "rs1_data"},
 	{"name": "rs2_data"},
@@ -18,13 +19,13 @@
     "instructions": [
 
 	{"name": "_def", "mappings": [
-	    {"traceValue": "opc", "description": "${ba}"},
+	    {"traceValue": "code", "description": "${ba}"},
 	    {"traceValue": "pc", "description": "${ic.current_address_}"},
 	    {"traceValue": "assembly", "description": "${instr.printASM(ba)}"}
 	]},
 
 	{"name": "jal", "mappings":[
-	    {"traceValue": "opc", "description": "${ba}"},
+	    {"traceValue": "code", "description": "${ba}"},
 	    {"traceValue": "pc", "description": "${ic.current_address_}"},
 	    {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	    {"traceValue": "rd_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rd_data [(0:11,7)]} }]", "position": "post"},
@@ -32,7 +33,7 @@
 	]},
 
 	{"name": "jalr", "mappings":[
-	    {"traceValue": "opc", "description": "${ba}"},
+	    {"traceValue": "code", "description": "${ba}"},
 	    {"traceValue": "pc", "description": "${ic.current_address_}"},
 	    {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	    {"traceValue": "rs1_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs1_data [(0:19,15)]} }]"},
@@ -46,7 +47,7 @@
 	{"name": "Arith_R_Type",
 	 "instructions": [{"name": "add"}, {"name": "sub"}, {"name": "sll"}, {"name": "xor"}, {"name": "or"}, {"name": "and"}, {"name": "mul"}, {"name": "rem"}],
 	 "mappings": [
-	     {"traceValue": "opc", "description": "${ba}"},
+	     {"traceValue": "code", "description": "${ba}"},
 	     {"traceValue": "pc", "description": "${ic.current_address_}"},
 	     {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	     {"traceValue": "rs1_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs1_data [(0:19,15)]} }]"},
@@ -58,7 +59,7 @@
 	{"name": "Arith_I_Type",
 	 "instructions": [{"name": "addi"}, {"name": "slti"}, {"name": "sltiu"}, {"name": "xori"}, {"name": "ori"}, {"name": "andi"}],
 	 "mappings": [
-	     {"traceValue": "opc", "description": "${ba}"},
+	     {"traceValue": "code", "description": "${ba}"},
 	     {"traceValue": "pc", "description": "${ic.current_address_}"},
 	     {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	     {"traceValue": "rs1_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs1_data [(0:19,15)]} }]"},
@@ -69,7 +70,7 @@
 	{"name": "Arith_Imm_R_Type",
 	 "instructions": [{"name": "slli"}, {"name": "srli"}, {"name": "srai"}],
 	 "mappings": [
-	     {"traceValue": "opc", "description": "${ba}"},
+	     {"traceValue": "code", "description": "${ba}"},
 	     {"traceValue": "pc", "description": "${ic.current_address_}"},
 	     {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	     {"traceValue": "rs1_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs1_data [(0:19,15)]} }]"},
@@ -80,7 +81,7 @@
 	{"name": "Load_I_Type",
 	 "instructions": [{"name": "lb"}, {"name": "lh"}, {"name": "lw"}, {"name": "lbu"}, {"name": "lhu"}],
 	 "mappings": [
-	     {"traceValue": "opc", "description": "${ba}"},
+	     {"traceValue": "code", "description": "${ba}"},
 	     {"traceValue": "pc", "description": "${ic.current_address_}"},
 	     {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	     {"traceValue": "rs1_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs1_data [(0:19,15)]} }]"},
@@ -93,7 +94,7 @@
 	{"name": "Store_S_Type",
 	 "instructions": [{"name": "sb"}, {"name": "sh"}, {"name": "sw"}],
 	 "mappings": [
-	     {"traceValue": "opc", "description": "${ba}"},
+	     {"traceValue": "code", "description": "${ba}"},
 	     {"traceValue": "pc", "description": "${ic.current_address_}"},
 	     {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	     {"traceValue": "rs1_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs1_data [(0:19,15)]} }]"},
@@ -106,7 +107,7 @@
 	{"name": "CSR_I_Type",
 	 "instructions": [{"name": "csrrw"}, {"name": "csrrs"}, {"name": "csrrc"}],
 	 "mappings": [
-	     {"traceValue": "opc", "description": "${ba}"},
+	     {"traceValue": "code", "description": "${ba}"},
 	     {"traceValue": "pc", "description": "${ic.current_address_}"},
 	     {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	     {"traceValue": "rs1_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs1_data [(0:19,15)]} }]"},
@@ -118,7 +119,7 @@
 	{"name": "CSR_Imm_I_Type",
 	 "instructions": [{"name": "csrrwi"}, {"name": "csrrsi"}, {"name": "csrrci"}],
 	 "mappings": [
-	     {"traceValue": "opc", "description": "${ba}"},
+	     {"traceValue": "code", "description": "${ba}"},
 	     {"traceValue": "pc", "description": "${ic.current_address_}"},
 	     {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	     {"traceValue": "rd_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rd_data [(0:11,7)]} }]", "position": "post"},
@@ -129,7 +130,7 @@
 	{"name": "Branch_B_Type",
 	 "instructions": [{"name": "beq"}, {"name": "bne"}, {"name": "blt"}, {"name": "bge"}, {"name": "bltu"}, {"name": "bgeu"}],
 	 "mappings": [
-	     {"traceValue": "opc", "description": "${ba}"},
+	     {"traceValue": "code", "description": "${ba}"},
 	     {"traceValue": "pc", "description": "${ic.current_address_}"},
 	     {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	     {"traceValue": "rs1_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs1_data [(0:19,15)]} }]"},
@@ -141,7 +142,7 @@
 	{"name": "RegLoad_U_Type",
 	 "instructions": [{"name": "lui"}, {"name": "auipc"}],
 	 "mappings": [
-	     {"traceValue": "opc", "description": "${ba}"},
+	     {"traceValue": "code", "description": "${ba}"},
 	     {"traceValue": "pc", "description": "${ic.current_address_}"},
 	     {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	     {"traceValue": "rd_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rd_data [(0:11,7)]} }]", "position": "post"}

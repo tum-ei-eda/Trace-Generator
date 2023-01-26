@@ -32,6 +32,7 @@ class Trace(MetaTraceModel_base):
         self.instructionTypes = []
         self.instructions = {}
         self.traceValues = {}
+        self.separator = "|"
         
         super().__init__()
 
@@ -74,6 +75,12 @@ class Trace(MetaTraceModel_base):
         for map_i in self.getAllMappings():
             descriptions.append(map_i.description)
         return descriptions
+
+    def setSeparator(self, sep_):
+        self.separator = sep_
+
+    def getSeparator(self):
+        return self.separator
     
 class InstructionType(MetaTraceModel_base):
 
