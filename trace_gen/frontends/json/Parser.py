@@ -99,81 +99,94 @@ class Parser():
 
     # TODO: Initial solution with BITFIELD keyword. Find way to incoperate CoreDSL?
     def resolveDescriptions(self, traceModel_):
-        
+
         for descr_i in traceModel_.getAllDescriptions():
-            
-            # Resolve BITFIELD keyword
-            bitfieldDescriptions = re.findall("\$\{BITFIELD[^\}]*\}", descr_i.original)
 
-            descr_temp = descr_i.original
-            if bitfieldDescriptions:
-                for bfDescr_i in bitfieldDescriptions:
-
-                    # Isolate bitfield description 
-                    bitfield_str = re.split("\$\{BITFIELD", bfDescr_i)[1]
-                    bitfield_str = re.split("\}", bitfield_str)[0]
-
-                    # Split bitfield description into name and range description
-                    splitStr = re.split("\[", bitfield_str)
-
-                    # Find name and create new bitfield model
-                    name = splitStr[0].replace(' ', '')
-                    bitfield_model = descr_i.createAndAddBitfield(name)
-
-                    # Find and add bit ranges
-                    rangeStr = splitStr[1].replace(']','')
-                    ranges = re.split("\|", rangeStr)
-                    for r_i in ranges:
-                        r = r_i.replace('(','')
-                        r = r.replace(')','')
-                        r = r.replace(' ', '')
-                        r_split = re.split(":", r)
-                        offset = r_split[0]
-                        bits = re.split(",", r_split[1])
-                        msb = bits[0]
-                        lsb = bits[1]
-                        bitfield_model.createAndAddBitRange(offset, msb, lsb)
-
-                    descr_temp = re.sub("\$\{BITFIELD[^\}]*\}", bitfield_model.name, descr_temp, 1)
-                
-            # Break description into preprocessed and not-preprocessed description-snippets
-            firstSplit = True
-            for split_i in re.split("\${", descr_temp):
-
-                # First split only contains of not-preprocessed snippet
-                if firstSplit:
-                    firstSplit = False
-                    if split_i:
-                        descr_i.createAndAppendDescriptionSnippet(split_i)
-
-                else:
-
-                    # Loop through split_i to find end of preprocessed snippet
-                    preProcessedSnippet = ""
-                    numNestedBrackets = 0
-                    startNotPreProcessedSnippet = 0
-                    for c in split_i:
-
-                        startNotPreProcessedSnippet += 1
-                        
-                        if c == '}':
-                            if numNestedBrackets != 0:
-                                numNestedBrackets -= 1
-                            else:
-                                break
-
-                        elif c == '{':
-                            numNestedBrackets += 1
-
-                        preProcessedSnippet += c
-                            
-                    descr_i.createAndAppendDescriptionSnippet(preProcessedSnippet, True)
-                    if (startNotPreProcessedSnippet < len(split_i)):
-                        descr_i.createAndAppendDescriptionSnippet(split_i[startNotPreProcessedSnippet : ])
-                        
+            descr_temp = self.__resolveBitfields(descr_i)
+            self.__resolvePreprocessing(descr_i, descr_temp)                        
 
     ## HELPER FUNCTIONS
+
+    def __resolveBitfields(self, descr_):
+
+        descr_temp = descr_.original
             
+        # Resolve BITFIELD keyword
+        bitfieldDescriptions = re.findall("\$\{BITFIELD[^\}]*\}", descr_temp)
+        
+        if bitfieldDescriptions:
+            for bfDescr_i in bitfieldDescriptions:
+        
+                # Isolate bitfield description 
+                bitfield_str = re.split("\$\{BITFIELD", bfDescr_i)[1]
+                bitfield_str = re.split("\}", bitfield_str)[0]
+        
+                # Split bitfield description into name and range description
+                splitStr = re.split("\[", bitfield_str)
+                
+                # Find name and create new bitfield model
+                bitfieldName = splitStr[0].replace(' ', '')
+                for instr_i in descr_.getInstructionType().getAllInstructions():
+
+                    if not instr_i.bitfieldExists(bitfieldName):
+                        bitfield = instr_i.createAndAddBitfield(bitfieldName)
+                    
+                        # Find and add bit ranges
+                        rangeStr = splitStr[1].replace(']','')
+                        ranges = re.split("\|", rangeStr)
+                        for r_i in ranges:
+                            r = r_i.replace('(','')
+                            r = r.replace(')','')
+                            r = r.replace(' ', '')
+                            r_split = re.split(":", r)
+                            offset = r_split[0]
+                            bits = re.split(",", r_split[1])
+                            msb = bits[0]
+                            lsb = bits[1]
+                            bitfield.createAndAddBitRange(offset, msb, lsb)
+
+                # Replace bitfield notation with name of bitfield
+                descr_temp = re.sub("\$\{BITFIELD[^\}]*\}", bitfield.name, descr_temp, 1)
+
+        return descr_temp
+
+    def __resolvePreprocessing(self, descrModel_, descrStr_):
+
+        # Break description into preprocessed and not-preprocessed description-snippets
+        firstSplit = True
+        for split_i in re.split("\${", descrStr_):
+        
+            # First split only contains of not-preprocessed snippet
+            if firstSplit:
+                firstSplit = False
+                if split_i:
+                    descrModel_.createAndAppendDescriptionSnippet(split_i)
+        
+            else:
+        
+                # Loop through split_i to find end of preprocessed snippet
+                preProcessedSnippet = ""
+                numNestedBrackets = 0
+                startNotPreProcessedSnippet = 0
+                for c in split_i:
+        
+                    startNotPreProcessedSnippet += 1
+                        
+                    if c == '}':
+                        if numNestedBrackets != 0:
+                            numNestedBrackets -= 1
+                        else:
+                            break
+        
+                    elif c == '{':
+                        numNestedBrackets += 1
+        
+                    preProcessedSnippet += c
+                            
+                descrModel_.createAndAppendDescriptionSnippet(preProcessedSnippet, True)
+                if (startNotPreProcessedSnippet < len(split_i)):
+                    descrModel_.createAndAppendDescriptionSnippet(split_i[startNotPreProcessedSnippet : ])
+    
     def __addMapping(self, instrTypeModel_, instrOrGroup_):
         for mapping_i in instrOrGroup_['mappings']:
             try:

@@ -111,7 +111,7 @@ class InstructionType(MetaTraceModel_base):
         except KeyError:
             raise TypeError("Mapping for instruction %s: Cannot create mapping for trace-value %s. Trace-value does not exist (Make sure to add all trace-values to the trace-model before creating mappings)" %(self.name, trValName_))
 
-        mapping = Mapping(trVal, Description(description_), position_)
+        mapping = Mapping(self, trVal, description_, position_)
         self.mappings[trValName_] = mapping
         return mapping
 
@@ -126,12 +126,13 @@ class InstructionType(MetaTraceModel_base):
             return self.mappings[trVal_.name]
         except KeyError:
             return None
-    
+
 class Instruction(MetaTraceModel_base):
 
     def __init__(self, name_, type_):
         self.name = name_
         self.instructionType = type_
+        self.bitfields = {}
         
         super().__init__()
 
@@ -154,6 +155,19 @@ class Instruction(MetaTraceModel_base):
     
     def getInstructionType(self):
         return self.instructionType
+
+    def bitfieldExists(self, name_):
+        return name_ in self.bitfields
+    
+    def createAndAddBitfield(self, name_):
+        if self.bitfieldExists(name_):
+            raise RuntimeError("Cannot create bitfield \"%s\" for instruction \"%s\". A bitfield with that name already exists" %(name_, self.name))
+        bf = Bitfield(name_)
+        self.bitfields[name_] = bf
+        return bf
+
+    def getAllBitfields(self):
+        return self.bitfields.values()
     
 class TraceValue(MetaTraceModel_base):
 
@@ -166,11 +180,12 @@ class TraceValue(MetaTraceModel_base):
 
 class Mapping(MetaTraceModel_base):
 
-    def __init__(self, trVal_, descr_, pos_):
+    def __init__(self, type_, trVal_, descr_, pos_):
+        self.instructionType = type_
         self.traceValue = trVal_
-        self.description = descr_
+        self.description = Description(self, descr_)
         if pos_ not in ["pre", "post"]:
-            raise TypeError("Cannot create object of type MetaTraceModel::Mapping with position %s! Currently supported positions are \"pre\" and \"post\"" %pos_)
+            raise RuntimeError("Cannot create object of type MetaTraceModel::Mapping with position \"%s\"! Currently supported positions are \"pre\" and \"post\"" %pos_)
         self.position = pos_
         
         super().__init__()
@@ -187,20 +202,15 @@ class Mapping(MetaTraceModel_base):
     def getDescription(self):
         return self.description
 
-    def getAllBitfields(self):
-        return self.description.bitfields
+    def getInstructionType(self):
+        return self.instructionType
     
 class Description(MetaTraceModel_base):
 
-    def __init__(self, orig_):
+    def __init__(self, map_, orig_):
+        self.mapping = map_
         self.original = orig_
         self.resolved = []
-        self.bitfields = []
-
-    def createAndAddBitfield(self, name_):
-        bf = Bitfield(name_)
-        self.bitfields.append(bf)
-        return bf
 
     def createAndAppendDescriptionSnippet(self, content_, preProcess_=False):
         snippet = DescriptionSnippet(content_, preProcess_)
@@ -208,7 +218,10 @@ class Description(MetaTraceModel_base):
 
     def getAllDescriptionSnippets(self):
         return self.resolved
-        
+
+    def getInstructionType(self):
+        return self.mapping.getInstructionType()
+    
 class DescriptionSnippet(MetaTraceModel_base):
 
     def __init__(self, content_, preProcess_):

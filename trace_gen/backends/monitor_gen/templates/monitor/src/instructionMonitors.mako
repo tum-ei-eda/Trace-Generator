@@ -31,6 +31,7 @@ static InstructionMonitor *${builder_.getInstrMonitorName(instr_i.name)} = new I
   "${instr_i.name}",
   [](etiss::instr::BitArray &ba, etiss::instr::Instruction &instr, etiss::instr::InstructionContext &ic){
     std::stringstream ret_strs;
+    <%include file="bitfields.mako" args="instr_ = instr_i"/>\
     ret_strs << "${builder_.getBufferName("typeId")}[*${builder_.getInstrCntName()}] = " << ${instr_i.getInstructionType().identifier} << ";\n";
     % for map_i in instr_i.getAllPreMappings():
     <%include file="traceValueMonitor.mako" args="map_ = map_i, builder_ = builder_"/>\
@@ -40,6 +41,7 @@ static InstructionMonitor *${builder_.getInstrMonitorName(instr_i.name)} = new I
   },
   [](etiss::instr::BitArray &ba, etiss::instr::Instruction &instr, etiss::instr::InstructionContext &ic){
     std::stringstream ret_strs;
+    <%include file="bitfields.mako" args="instr_ = instr_i"/>\
     ret_strs << "*${builder_.getInstrCntName()} -= 1;\n"; // TODO: Hack! Needed as long as instrCnt is set by pre-print-function (see above)
     % for map_i in instr_i.getAllPostMappings():
     <%include file="traceValueMonitor.mako" args="map_ = map_i, builder_ = builder_"/>\
