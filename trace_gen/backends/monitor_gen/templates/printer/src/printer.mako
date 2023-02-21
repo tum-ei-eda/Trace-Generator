@@ -35,6 +35,6 @@ void ${traceModel_.name}_Printer::initialize(void)
   caption_strs << ${builder_.getStreamSetupCaption(trVal_i)} << "${trVal_i.name}" << ${builder_.getSeparater()};
   % endfor
 
+  streamer.setHeader(caption_strs.str() + "\n");
   streamer.openStream();
-  streamer.stream(caption_strs.str() + "\n");
 }
