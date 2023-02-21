@@ -1,5 +1,5 @@
 {"trace": {
-    "name": "InstructionTrace",
+    "name": "InstructionTrace_RV32IMACFD",
     "setId": "Automatic",
     "separator": ";",
     "traceValues": [

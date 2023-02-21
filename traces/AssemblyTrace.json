@@ -1,6 +1,7 @@
 {"trace": {
     "name": "AssemblyTrace",
     "setId": "Automatic",
+    "separator": ";",
     "traceValues": [
 	{"name": "pc"},
 	{"name": "assembly", "type": "string", "size": 50}
