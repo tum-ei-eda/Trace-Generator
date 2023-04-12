@@ -20,9 +20,9 @@ import argparse
 import pathlib
 import pickle
 
-from .Parser import Parser
+from .Parser import Parser, M2isarmodel
 
-def main(inFile_, outdir_=None):
+def main(inFile_, model_path, outdir_=None):
     
     # Find pathes for json-description and output-directory
     inFile = pathlib.Path(inFile_).resolve()
@@ -30,13 +30,24 @@ def main(inFile_, outdir_=None):
         outdir = pathlib.Path(outdir_).resolve()
     else:
         outdir = None
+    m2isar_model = pathlib.Path(model_path).resolve()
 
     # Parse json-description to trace-model
     print("")
     print("-- Generation TraceModel from JSON-file --")
     model = Parser().parse(inFile)
 
-    Parser().resolveDescriptions(model)
+    # Load m2isar-model into this FE
+    print("")
+    print("-- Reading from m2isarmodel-file --")
+    m2_mod = M2isarmodel().load_model(m2isar_model)
+    instr = M2isarmodel().resolve_instruction(m2_mod, 'RV32IMACFD') # ISA for the core RV32IMACFD
+    name_list = M2isarmodel().resolve_namelists(instr)
+
+    # Resolve descriptions in trace-model and parse bitfield and bitrange from m2isar-model to trace-model
+    print("")
+    print("-- Generating TraceModel: BifField and BitRange, from m2isarmodel --")
+    Parser().resolveDescriptions(name_list, model, instr)
     
     if outdir is not None:
         print("")
@@ -66,6 +77,7 @@ if __name__ == '__main__':
     argParser = argparse.ArgumentParser()
     argParser.add_argument("input_file", help="Path to file containing the json description of the trace.")
     argParser.add_argument("-o", "--output_dir", help="Directory to store generated trace-model.")
+    argParser.add_argument("m2isar_model", help="Path to m2isarmodel-file.")
     args = argParser.parse_args()
     
-    main(args.input_file, args.output_dir)
+    main(args.input_file, args.m2isar_model, args.output_dir)
