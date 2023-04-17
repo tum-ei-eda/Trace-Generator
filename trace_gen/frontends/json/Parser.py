@@ -18,9 +18,10 @@ import json
 import re
 import sys
 import pickle
+# import dill
 
 sys.path.append('/usr/local/research/projects/SystemDesign/work/performance-evaluation/qin/M2-ISA-R')
-
+sys.path.append('/usr/local/research/projects/SystemDesign/work/performance-evaluation/qin/Trace-Generator/trace_gen')
 from metamodel import MetaTraceModel
 from m2isar.metamodel import arch
 from m2isar.metamodel.arch import CoreDef
@@ -29,7 +30,7 @@ class M2isarmodel():
 
     def load_model(self, file):
         """ Load .m2isarmodel file """
-
+        
         # load model
         with open(file, 'rb') as f:
             model: "dict[str, CoreDef]" = pickle.load(f)
