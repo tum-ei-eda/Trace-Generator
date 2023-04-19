@@ -27,11 +27,13 @@ argParser = argparse.ArgumentParser()
 argParser.add_argument("description", help="File containing the trace description")
 argParser.add_argument("-p", "--printer", action="store_true", help="Switch to generate trace printer")
 argParser.add_argument("m2isar_model", help="Path to m2isarmodel-file.")
+argParser.add_argument("core_name", help="A specific core name in the m2isarmodel.")
+
 args = argParser.parse_args()
 
 # Call frontend to create traceModel
 if args.description.endswith('.json'):
-    traceModel = frontend.main(args.description, args.m2isar_model)
+    traceModel = frontend.main(args.description, args.m2isar_model, args.core_name)
 else:
     sys.exit("FATAL: Descritption format is not supported. Currently only supporting files of type .json")
 

@@ -28,13 +28,13 @@ from m2isar.metamodel.arch import CoreDef
 
 class M2isarmodel():
 
-    def load_model(self, file):
+    def load_models(self, file):
         """ Load .m2isarmodel file """
         
-        # load model
+        # load all core models in the file
         with open(file, 'rb') as f:
-            model: "dict[str, CoreDef]" = pickle.load(f)
-        return model
+            models: "dict[str, CoreDef]" = pickle.load(f)
+        return models
 
     def resolve_instruction(self, model, core_name):
         """ Return a list of instr_objs in a specific core_obj """
@@ -43,23 +43,9 @@ class M2isarmodel():
         core_obj = model[core_name]
         instr_list = core_obj.instructions.values()
         return instr_list
-    
-    def resolve_namelists(self, instr_list):
-        """ Return a dict, instr_name as keys and bf_name lists as values """
-
-        # Dict of name lists
-        name_lists = {}
-
-        for instr_i in instr_list:
-            bf_name = []
-            for enc in reversed(instr_i.encoding):
-                if isinstance(enc, arch.BitField):
-                    bf_name.append(enc.name)
-            name_lists[instr_i.name] = bf_name
-        return name_lists
 
     def resolve_bitrange(self, instr_name, bf_name, instr_list):
-        """ Return bitrange components of a bitfield """
+        """Return bitrange components of a bitfield"""
 
         # For the track of bit position
         enc_idx = 0
@@ -69,22 +55,32 @@ class M2isarmodel():
         msb = []
         lsb = []
 
+        instrName_found = False
+        bfName_found = False
+
         for instr_i in instr_list:
 
             # Find the instr_i with the instr_name
             if instr_name.lower() == instr_i.name.lower():
+                instrName_found = True
                 for enc in reversed(instr_i.encoding):
                     if isinstance(enc, arch.BitField):
                         length = enc.range.length
 
                         # Find the enc with the bf_name
                         if (bf_name == enc.name):
+                            bfName_found = True
                             offset.append(enc.range.lower)
                             msb.append(enc_idx + length - 1)
                             lsb.append(enc_idx)
                         enc_idx += length
                     else:
                         enc_idx += enc.length
+
+        if not instrName_found:
+            raise ValueError(f"No instruction in {instr_list} from m2isarmodel found with name {instr_name}")
+        if not bfName_found:
+            raise ValueError(f"No bitfield in {instr_name} from m2isarmodel found with name {bf_name}")
         return (offset, msb, lsb)
 
 class Parser():
@@ -166,7 +162,7 @@ class Parser():
 
 
     # TODO: Initial solution with BITFIELD keyword. Find way to incoperate CoreDSL?
-    def resolveDescriptions(self, name_lists, traceModel_, coredsl):
+    def resolveDescriptions(self, traceModel_, coredsl):
         """ Resolve descriptions and create bitfield and bitrange coperating with CoreDSL """
         
         # Bitrange components of a bitfield
@@ -191,13 +187,10 @@ class Parser():
                     bfName = re.split("\}", bfName)[0]
                     for instr_i in descr_i.getInstructionType().getAllInstructions():  
                         
-                        # Raise err
-                        if instr_i.name.upper() not in name_lists.keys():
-                            print("")
-                            print(f'The instr_name \'{instr_i.name}\' in trace did not match the m2isarmodel.')
-                        if bfName not in name_lists[instr_i.name.upper()]:
-                            print("")
-                            print(f'The bf_name \'{bfName}\' of \'{instr_i.name}\' in trace did not match the m2isarmodel.')
+                        # # Raise err
+                        # if instr_i.name.upper() not in name_lists.keys():
+                        #     print("")
+
                         
                         # For each instruction that has the same descriptions
                         offset, msb, lsb = M2isarmodel().resolve_bitrange(instr_i.name, bfName, coredsl)
