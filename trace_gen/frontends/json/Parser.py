@@ -78,9 +78,9 @@ class M2isarmodel():
                         enc_idx += enc.length
 
         if not instrName_found:
-            raise ValueError(f"No instruction in {instr_list} from m2isarmodel found with name {instr_name}")
+            raise ValueError(f"No instruction in {instr_list} from m2isarmodel found with name \'{instr_name}\'")
         if not bfName_found:
-            raise ValueError(f"No bitfield in {instr_name} from m2isarmodel found with name {bf_name}")
+            raise ValueError(f"No bitfield in \'{instr_name}\' from m2isarmodel found with name \'{bf_name}\'")
         return (offset, msb, lsb)
 
 class Parser():
