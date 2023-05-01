@@ -21,6 +21,7 @@ import sys
 
 import frontends.json.run as frontend
 import backends.monitor_gen.run as backend
+from backends.monitor_gen.bitfields import main
 
 # Read command line arguments
 argParser = argparse.ArgumentParser()
@@ -39,3 +40,7 @@ else:
 
 # Call backend
 backend.main(traceModel, args.printer)
+
+# fields_code = ""
+# fields_code = main(traceModel)
+# print(fields_code)

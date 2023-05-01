@@ -25,6 +25,7 @@ sys.path.append('/usr/local/research/projects/SystemDesign/work/performance-eval
 from metamodel import MetaTraceModel
 from m2isar.metamodel import arch
 from m2isar.metamodel.arch import CoreDef
+from m2isar.backends.etiss import instruction_utils
 
 class M2isarmodel():
 
@@ -73,6 +74,9 @@ class M2isarmodel():
                             offset.append(enc.range.lower)
                             msb.append(enc_idx + length - 1)
                             lsb.append(enc_idx)
+                            width = instr_i.fields[enc.name].actual_size
+                            type_ = f'{instruction_utils.data_type_map[enc.data_type]}{width}'
+
                         enc_idx += length
                     else:
                         enc_idx += enc.length
@@ -81,7 +85,7 @@ class M2isarmodel():
             raise ValueError(f"No instruction in {instr_list} from m2isarmodel found with name \'{instr_name}\'")
         if not bfName_found:
             raise ValueError(f"No bitfield in \'{instr_name}\' from m2isarmodel found with name \'{bf_name}\'")
-        return (offset, msb, lsb)
+        return (offset, msb, lsb, type_)
 
 class Parser():
 
@@ -186,20 +190,16 @@ class Parser():
                     bfName = re.split("\$\{BITFIELD\s", bfDescr_i)[1]
                     bfName = re.split("\}", bfName)[0]
                     for instr_i in descr_i.getInstructionType().getAllInstructions():  
-                        
-                        # # Raise err
-                        # if instr_i.name.upper() not in name_lists.keys():
-                        #     print("")
-
-                        
+                                                
                         # For each instruction that has the same descriptions
-                        offset, msb, lsb = M2isarmodel().resolve_bitrange(instr_i.name, bfName, coredsl)
+                        offset, msb, lsb, type_ = M2isarmodel().resolve_bitrange(instr_i.name, bfName, coredsl)
                         if not instr_i.bitfieldExists(bfName):
                             bitfield = instr_i.createAndAddBitfield(bfName)
-                            for i in range(0, len(offset)): 
+                            bitfield.addDataType(type_)
+                        for i in range(0, len(offset)): 
 
-                                # For the bitfield that has one or more bitranges
-                                bitfield.createAndAddBitRange(offset[i], msb[i], lsb[i])
+                            # For the bitfield that has one or more bitranges
+                            bitfield.createAndAddBitRange(offset[i], msb[i], lsb[i])
 
                     # Replace bitfield notation with name of bitfield
                     descr_temp = re.sub(

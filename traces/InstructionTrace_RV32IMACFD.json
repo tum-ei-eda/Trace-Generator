@@ -134,7 +134,7 @@
 	     {"traceValue": "pc", "description": "${ic.current_address_}"},
 	     {"traceValue": "assembly", "description": "${instr.printASM(ba)}"},
 	     {"traceValue": "rs1_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs1} }]"},
-	     {"traceValue": "rs2_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD rs2} }]"},
+	     {"traceValue": "rs2_data", "description": "*((RV32IMACFD*)cpu)->X[${ ${BITFIELD imm} }]"},
 	     {"traceValue": "jump_pc", "description": "cpu->instructionPointer", "position": "post"}
 	 ]
 	},
