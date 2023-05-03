@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 
+from m2isar.backends.etiss.fields_code import FieldsCode
+
 class CodeBuilder:
 # The idea of this class is to contain output code specific
 # information (e.g. channel sizes, naming conventions, etc)
@@ -81,8 +83,16 @@ class CodeBuilder:
             if not snip_i.isPreProcessed():
                 ret += "\""
         return ret
-            
-            
+    
+    def getFieldsCode(self, instr):
+        fields_code = ""
+        for bf_i in instr.getAllBitfields():
+            fc = FieldsCode(bf_i.name, 'int')
+            for br_i in bf_i.getAllBitRanges():
+                fc.addFieldsCode(br_i.offset, br_i.msb, br_i.lsb)
+                fields_code += fc.getFieldsCode()
+        return fields_code
+                
     ## HELPER FUNCTIONS
     
     def __getMonitorPrefix(self):

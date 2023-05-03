@@ -18,7 +18,6 @@ from mako.lookup import TemplateLookup
 from mako.template import Template
 
 from .CodeBuilder import CodeBuilder as Builder
-# from .bitfields import main
 
 class CodeGenerator:
 
@@ -68,7 +67,7 @@ class CodeGenerator:
         # Need template lookup here, as instructionMonitor.mako includes a sub-template
         templateLookup = TemplateLookup(directories=[str(self.templateDir_monitor / "src")])
         template = templateLookup.get_template("instructionMonitors.mako")
-        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)}) # TODO: need modify the template
+        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
 
         outFile = self.outDirBase / "src" / (traceModel_.name + "_InstructionMonitors.cpp")
         with outFile.open('w') as f:

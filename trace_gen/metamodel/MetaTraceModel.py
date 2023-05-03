@@ -239,7 +239,6 @@ class Bitfield(MetaTraceModel_base):
     def __init__(self, name_):
         self.name = name_
         self.bitRanges = []
-        # TODO: width
 
     def createAndAddBitRange(self, offset_, msb_, lsb_):
         br = BitRange(offset_, msb_, lsb_)
@@ -249,11 +248,12 @@ class Bitfield(MetaTraceModel_base):
     def getAllBitRanges(self):
         return self.bitRanges
     
-    def addDataType(self, type_):
-        self.dataType = type_
+    # Width and data type from m2isar
+    # def addDataType(self, type_):
+    #     self.dataType = type_
 
-    def getDataType(self):
-        return self.dataType
+    # def getDataType(self):
+    #     return self.dataType
 
 class BitRange(MetaTraceModel_base):
 

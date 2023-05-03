@@ -74,8 +74,10 @@ class M2isarmodel():
                             offset.append(enc.range.lower)
                             msb.append(enc_idx + length - 1)
                             lsb.append(enc_idx)
-                            width = instr_i.fields[enc.name].actual_size
-                            type_ = f'{instruction_utils.data_type_map[enc.data_type]}{width}'
+                            
+                            # Width and data type from m2isar
+                            # width = instr_i.fields[enc.name].actual_size
+                            # type_ = f'{instruction_utils.data_type_map[enc.data_type]}{width}'
 
                         enc_idx += length
                     else:
@@ -85,7 +87,7 @@ class M2isarmodel():
             raise ValueError(f"No instruction in {instr_list} from m2isarmodel found with name \'{instr_name}\'")
         if not bfName_found:
             raise ValueError(f"No bitfield in \'{instr_name}\' from m2isarmodel found with name \'{bf_name}\'")
-        return (offset, msb, lsb, type_)
+        return (offset, msb, lsb)
 
 class Parser():
 
@@ -192,10 +194,12 @@ class Parser():
                     for instr_i in descr_i.getInstructionType().getAllInstructions():  
                                                 
                         # For each instruction that has the same descriptions
-                        offset, msb, lsb, type_ = M2isarmodel().resolve_bitrange(instr_i.name, bfName, coredsl)
+                        offset, msb, lsb = M2isarmodel().resolve_bitrange(instr_i.name, bfName, coredsl)
                         if not instr_i.bitfieldExists(bfName):
                             bitfield = instr_i.createAndAddBitfield(bfName)
-                            bitfield.addDataType(type_)
+                            
+                            # Width and data type from m2isar
+                            # bitfield.addDataType(type_)
                         for i in range(0, len(offset)): 
 
                             # For the bitfield that has one or more bitranges

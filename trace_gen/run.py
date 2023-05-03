@@ -41,6 +41,3 @@ else:
 # Call backend
 backend.main(traceModel, args.printer)
 
-# fields_code = ""
-# fields_code = main(traceModel)
-# print(fields_code)
