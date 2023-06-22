@@ -21,79 +21,20 @@ from .CodeBuilder import CodeBuilder as Builder
 
 class CodeGenerator:
 
-    def __init__(self, templateDir_, outDir_):
-        self.templateDir_monitor = templateDir_ / "monitor"
-        self.templateDir_printer = templateDir_ / "printer"
-        self.outDirBase = outDir_
+    def __init__(self, model_, fileDict_):
+
+        self.fileDict = fileDict_
+        self.traceModel = model_
+        self.builder = Builder(model_)
         
-    def generateMonitor(self, traceModel_):
+    def generate(self, name_):
 
-        self.__generateTraceChannel(traceModel_)
-        self.__generateMonitor(traceModel_)
-        self.__generateInstructionMonitors(traceModel_)
+        # Need template lookup here, as some templates require sub-templates
+        templateFile = self.fileDict.getTemplate(name_)
+        templateLookup = TemplateLookup(directories=[templateFile.parents[0]])
+        template = templateLookup.get_template(templateFile.name)
+        code = template.render(**{"traceModel_" : self.traceModel, "builder_" : self.builder})
 
-    def generatePrinter(self, traceModel_):
-
-        self.__generatePrinter(traceModel_)
-        self.__generateInstructionPrinters(traceModel_)
-        
-    def __generateTraceChannel(self, traceModel_):
-
-        template = Template(filename = str(self.templateDir_monitor) + "/include/channel.mako")
-        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
-
-        outFile = self.outDirBase / "include" / (traceModel_.name + "_Channel.h")
-        with outFile.open('w') as f:
-            f.write(code)
-
-    def __generateMonitor(self, traceModel_):
-
-        template_header = Template(filename = str(self.templateDir_monitor) + "/include/monitor.mako")
-        code_header = template_header.render(**{"traceModel_" : traceModel_})
-
-        outFile_header = self.outDirBase / "include" / (traceModel_.name + "_Monitor.h")
-        with outFile_header.open('w') as f:
-            f.write(code_header)
-
-        template_src = Template(filename = str(self.templateDir_monitor) + "/src/monitor.mako")
-        code_src = template_src.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
-
-        outFile_src = self.outDirBase / "src" / (traceModel_.name + "_Monitor.cpp")
-        with outFile_src.open('w') as f:
-            f.write(code_src)
-
-    def __generateInstructionMonitors(self, traceModel_):
-
-        # Need template lookup here, as instructionMonitor.mako includes a sub-template
-        templateLookup = TemplateLookup(directories=[str(self.templateDir_monitor / "src")])
-        template = templateLookup.get_template("instructionMonitors.mako")
-        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
-
-        outFile = self.outDirBase / "src" / (traceModel_.name + "_InstructionMonitors.cpp")
-        with outFile.open('w') as f:
-            f.write(code)
-
-    def __generatePrinter(self, traceModel_):
-
-        template_header = Template(filename = str(self.templateDir_printer) + "/include/printer.mako")
-        code_header = template_header.render(**{"traceModel_" : traceModel_})
-
-        outFile_header = self.outDirBase / "include" / (traceModel_.name + "_Printer.h")
-        with outFile_header.open('w') as f:
-            f.write(code_header)
-
-        template_src = Template(filename = str(self.templateDir_printer) + "/src/printer.mako")
-        code_src = template_src.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
-
-        outFile_src = self.outDirBase / "src" / (traceModel_.name + "_Printer.cpp")
-        with outFile_src.open('w') as f:
-            f.write(code_src)
-
-    def __generateInstructionPrinters(self, traceModel_):
-
-        template = Template(filename = str(self.templateDir_printer) + "/src/instructionPrinters.mako")
-        code = template.render(**{"traceModel_" : traceModel_, "builder_" : Builder(traceModel_)})
-        
-        outFile = self.outDirBase / "src" / (traceModel_.name + "_InstructionPrinters.cpp")
+        outFile = self.fileDict.getOutFile(name_)
         with outFile.open('w') as f:
             f.write(code)

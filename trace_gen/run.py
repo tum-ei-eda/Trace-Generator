@@ -18,15 +18,20 @@
 
 import argparse
 import sys
+import pathlib
 
 import frontends.json.run as frontend
 import backends.monitor_gen.run as backend
+from common import common as cf
 
 # Read command line arguments
 argParser = argparse.ArgumentParser()
 argParser.add_argument("description", help="File containing the trace description")
-argParser.add_argument("-p", "--printer", action="store_true", help="Switch to generate trace printer")
+argParser.add_argument("-o", "--outDir", help="Path to the output directory")
 args = argParser.parse_args()
+
+# Evaluate output path
+outDir = cf.resolveOutDir(args.outDir)
 
 # Call frontend to create traceModel
 if args.description.endswith('.json'):
@@ -35,4 +40,4 @@ else:
     sys.exit("FATAL: Descritption format is not supported. Currently only supporting files of type .json")
 
 # Call backend
-backend.main(traceModel, args.printer)
+backend.main(traceModel, outDir)
