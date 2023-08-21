@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-/********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
+/********************* AUTO GENERATE FILE (create by TraceGenerator) *********************/
 
-#include "Components/Monitor.h"
+#include "Monitor.h"
 
 #include "etiss/Instruction.h"
 

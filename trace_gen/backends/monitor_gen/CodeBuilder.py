@@ -19,7 +19,7 @@ class CodeBuilder:
 # information (e.g. channel sizes, naming conventions, etc)
 
     __MAX_STRING_SIZE_DEFAULT = 100
-    __MAX_INT_SIZE = 8
+    __MAX_INT_SIZE = 16
     __CHANNEL_SIZE = 100
     
     def __init__(self, model_):
@@ -43,26 +43,28 @@ class CodeBuilder:
     def getStreamSetup(self, trVal_):
         if(trVal_.dataType == "int"):
             return self.__getStreamSetupInt()
+        elif(trVal_.dataType == "uint64_t"):
+            return self.__getStreamSetupInt()
         elif(trVal_.dataType == "string"):
             return self.__getStreamSetupString(self.__getValidStringSize(trVal_))
         else:
-            raise TypeError("Cannot call CodeBuilder::getStreamSetup with type %s" %type_)
+            raise TypeError("Cannot call CodeBuilder::getStreamSetup with type %s" %trVal_.dataType)
 
     def getEmptyStream(self, trVal_):
-        if(trVal_.dataType == "int"):
+        if(trVal_.dataType == "int") or (trVal_.dataType == "uint64_t"):
             return self.__getEmptyStreamWithSize(self.__MAX_INT_SIZE + 2)
         elif(trVal_.dataType == "string"):
             return self.__getEmptyStreamWithSize(self.__getValidStringSize(trVal_))
         else:
-            raise TypeError("Cannot call CodeBuilder::getStreamSetup with type %s" %type_)
+            raise TypeError("Cannot call CodeBuilder::getStreamSetup with type %s" %trVal_.dataType)
 
     def getStreamSetupCaption(self, trVal_):
-        if(trVal_.dataType == "int"):
+        if(trVal_.dataType == "int") or (trVal_.dataType == "uint64_t"):
             return self.__getStreamSetupString(self.__MAX_INT_SIZE + 2) # TODO: This won't work if name of tracevalue is longer than INT_SIZE + 2
         elif(trVal_.dataType == "string"):
             return self.__getStreamSetupString(self.__getValidStringSize(trVal_))
         else:
-            raise TypeError("Cannot call CodeBuilder::getStreamSetup with type %s" %type_)
+            raise TypeError("Cannot call CodeBuilder::getStreamSetup with type %s" %trVal_.dataType)
         
     def getSeparater(self):
         return "\" " + self.model.getSeparator() + " \""
@@ -81,8 +83,16 @@ class CodeBuilder:
             if not snip_i.isPreProcessed():
                 ret += "\""
         return ret
-            
-            
+
+    def getHeaderDefinePrefix_Monitor(self, model_):
+        return ("SWEVAL_MONITOR_" + model_.name.upper() + "_MONITOR_H") 
+    
+    def getHeaderDefinePrefix_Channel(self, model_):
+        return (self.__getHeaderDefinePrefix_SWEvalBackends(model_) + "_CHANNEL_H")
+
+    def getHeaderDefinePrefix_Printer(self, model_):
+        return (self.__getHeaderDefinePrefix_SWEvalBackends(model_) + "_PRINTER_H")
+    
     ## HELPER FUNCTIONS
     
     def __getMonitorPrefix(self):
@@ -99,3 +109,6 @@ class CodeBuilder:
 
     def __getValidStringSize(self, trVal_):
         return trVal_.size if trVal_.size > 0 else self.__MAX_STRING_SIZE_DEFAULT
+
+    def __getHeaderDefinePrefix_SWEvalBackends(self, model_):
+        return ("SWEVAL_BACKENDS_" + model_.name.upper())
