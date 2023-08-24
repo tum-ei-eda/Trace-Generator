@@ -70,7 +70,7 @@ class CodeGenerator:
         with outFile_src.open('w') as f:
             f.write(code_src)
 
-    def __generateInstructionMonitors(self, traceModel_)
+    def __generateInstructionMonitors(self, traceModel_):
             
         # Need template lookup here, as instructionMonitor.mako includes a sub-template
         templateLookup = TemplateLookup(directories=[str(self.templateDir_monitor / "src")])
