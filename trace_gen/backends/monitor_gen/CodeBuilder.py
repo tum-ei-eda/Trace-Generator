@@ -84,14 +84,14 @@ class CodeBuilder:
                 ret += "\""
         return ret
 
-    def getHeaderDefinePrefix_Monitor(self, model_):
-        return ("SWEVAL_MONITOR_" + model_.name.upper() + "_MONITOR_H") 
+    def getHeaderDefinePrefix_Monitor(self):
+        return ("SWEVAL_MONITOR_" + self.model.name.upper() + "_MONITOR_H") 
     
-    def getHeaderDefinePrefix_Channel(self, model_):
-        return (self.__getHeaderDefinePrefix_SWEvalBackends(model_) + "_CHANNEL_H")
+    def getHeaderDefinePrefix_Channel(self):
+        return (self.__getHeaderDefinePrefix_SWEvalBackends() + "_CHANNEL_H")
 
-    def getHeaderDefinePrefix_Printer(self, model_):
-        return (self.__getHeaderDefinePrefix_SWEvalBackends(model_) + "_PRINTER_H")
+    def getHeaderDefinePrefix_Printer(self):
+        return (self.__getHeaderDefinePrefix_SWEvalBackends() + "_PRINTER_H")
     
     ## HELPER FUNCTIONS
     
@@ -110,5 +110,5 @@ class CodeBuilder:
     def __getValidStringSize(self, trVal_):
         return trVal_.size if trVal_.size > 0 else self.__MAX_STRING_SIZE_DEFAULT
 
-    def __getHeaderDefinePrefix_SWEvalBackends(self, model_):
-        return ("SWEVAL_BACKENDS_" + model_.name.upper())
+    def __getHeaderDefinePrefix_SWEvalBackends(self):
+        return ("SWEVAL_BACKENDS_" + self.model.name.upper())

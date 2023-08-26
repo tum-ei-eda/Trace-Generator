@@ -16,8 +16,8 @@
 
 /********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
 
-#ifndef ${builder_.getHeaderDefinePrefix_Monitor(traceModel_)}
-#define ${builder_.getHeaderDefinePrefix_Monitor(traceModel_)}
+#ifndef ${builder_.getHeaderDefinePrefix_Monitor()}
+#define ${builder_.getHeaderDefinePrefix_Monitor()}
 
 #include "Monitor.h"
 #include "softwareEval-backends/Channel.h"
@@ -34,4 +34,4 @@ public:
   virtual std::string getBlockDeclarations(void) const;
 };
 
-#endif // ${builder_.getHeaderDefinePrefix_Monitor(traceModel_)}
+#endif // ${builder_.getHeaderDefinePrefix_Monitor()}

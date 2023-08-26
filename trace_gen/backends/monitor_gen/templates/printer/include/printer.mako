@@ -16,8 +16,8 @@
 
 /********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
                    
-#ifndef ${builder_.getHeaderDefinePrefix_Printer(traceModel_)}
-#define ${builder_.getHeaderDefinePrefix_Printer(traceModel_)}
+#ifndef ${builder_.getHeaderDefinePrefix_Printer()}
+#define ${builder_.getHeaderDefinePrefix_Printer()}
 
 #include "Printer.h"
 
@@ -58,4 +58,4 @@ private:
   % endfor
 };
 
-#endif // ${builder_.getHeaderDefinePrefix_Printer(traceModel_)}
+#endif // ${builder_.getHeaderDefinePrefix_Printer()}

@@ -49,7 +49,6 @@ class FileDict:
         self.dict["InstructionPrintersSource"] = {  "Template" : templateDir / "printer/src/instructionPrinters.mako",
                                         "OutFile" : self.dict["PrinterSource"]["OutFile"].parents[0] / (modelName_ + "_InstructionPrinters.cpp")}
 
-
     def getTemplate(self, name_):
         return self.__get(name_, "Template")
 
@@ -72,6 +71,7 @@ def main(model_, outDir_):
     print()
     print("-- Generating code for trace-channel --")
     codeGen.generate("ChannelHeader")
+    codeGen.generate("ChannelSource")
     
     print()
     print("-- Generating code for trace-monitor --")

@@ -16,8 +16,8 @@
 
 /********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
 
-#ifndef ${builder_.getHeaderDefinePrefix_Channel(traceModel_)}
-#define ${builder_.getHeaderDefinePrefix_Channel(traceModel_)}
+#ifndef ${builder_.getHeaderDefinePrefix_Channel()}
+#define ${builder_.getHeaderDefinePrefix_Channel()}
 
 #include "Channel.h"
 
@@ -45,4 +45,4 @@ public:
   virtual void *getTraceValueHook(std::string);
 };
 
-#endif // ${builder_.getHeaderDefinePrefix_Channel(traceModel_)}
+#endif // ${builder_.getHeaderDefinePrefix_Channel()}
