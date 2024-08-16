@@ -16,10 +16,10 @@
 
 /********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
 
-#include "Components/Printer.h"
-#include "Components/Channel.h"
+#include "Printer.h"
+#include "Channel.h"
 
-#include "${traceModel_.name}_Channel.h"
+#include "${traceModel_.name}_Printer.h"
 
 #include <sstream>
 #include <string>
@@ -32,12 +32,12 @@ static InstructionPrinter *instrPrinter_${type_i.name} = new InstructionPrinter(
   ${traceModel_.name}_InstrPrinterSet,
   "${type_i.name}",
   ${type_i.identifier},
-  [](Channel* channel_, int instr_){
+  [](Printer* printer_){
     std::stringstream ret_strs;
-    ${traceModel_.name}_Channel* channel = static_cast<${traceModel_.name}_Channel*>(channel_);
+    ${traceModel_.name}_Printer* printer = static_cast<${traceModel_.name}_Printer*>(printer_);
     % for trVal_i in traceModel_.getAllTraceValues():
     % if type_i.getMapping(trVal_i) is not None:
-    ret_strs << ${builder_.getStreamSetup(trVal_i)} << channel->${trVal_i.name}[instr_] << ${builder_.getSeparater()};
+    ret_strs << ${builder_.getStreamSetup(trVal_i)} << printer->get_${trVal_i.name}() << ${builder_.getSeparater()};
     % else:
     ret_strs << ${builder_.getEmptyStream(trVal_i)} << ${builder_.getSeparater()};
     % endif

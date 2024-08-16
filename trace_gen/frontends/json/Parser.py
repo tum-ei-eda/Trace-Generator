@@ -93,7 +93,7 @@ class Parser():
 
             # Add mappings to instruction-type
             self.__addMapping(instrType_model, instr_i)
-                    
+        
         return trace_model
 
 
